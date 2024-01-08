@@ -17,7 +17,9 @@ func (Postgres) GetConnection() (*gorm.DB, error) {
 			config.Host, config.Username, config.Password, config.Name, config.Port,
 		),
 		PreferSimpleProtocol: true,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 
 	return db, err
 }
