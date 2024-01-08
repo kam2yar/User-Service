@@ -2,7 +2,8 @@ version: '3'
 
 services:
   app:
-    image: golang:1.21
+    build:
+      dockerfile: Dockerfile
     container_name: users
     ports:
       - "${APP_FORWARD_PORT:-8080}:8080"
