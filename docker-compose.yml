@@ -9,6 +9,8 @@ services:
       - "${APP_FORWARD_PORT:-8080}:8080"
     depends_on:
       - db
+    networks:
+      - network
   db:
     image: postgres:latest
     container_name: postgres
@@ -16,10 +18,16 @@ services:
       POSTGRES_USER: "${POSTGRES_USER:-postgres}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-postgres}"
       POSTGRES_DB: "${POSTGRES_DB:-users}"
+      PGPORT: 5433
     ports:
-      - "${POSTGRES_FORWARD_PORT:-5432}:5432"
+      - "${POSTGRES_FORWARD_PORT:-5432}:${POSTGRES_PORT:-5432}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - network
 
 volumes:
   postgres_data:
+networks:
+  network:
+    driver: bridge
