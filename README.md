@@ -2,8 +2,8 @@
 Small service for manage the user entity
 
 ### Requirements:
-#### docker
-#### docker-compose
+1. docker
+2. docker-compose
 
 ## Run the application
 ```
