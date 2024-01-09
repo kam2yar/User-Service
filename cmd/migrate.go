@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/kam2yar/user-service/internal/database/connections"
+	"github.com/kam2yar/user-service/internal/database/db"
 	"github.com/kam2yar/user-service/internal/database/entities"
 	"time"
 )
@@ -18,12 +18,12 @@ func main() {
 }
 
 func migrate() {
-	db := connections.DefaultConnection()
+	dbc := db.DefaultConnection()
 
 	for index, table := range tables {
 		fmt.Print(index + 1)
 		fmt.Print(") Processing User... ")
-		db.AutoMigrate(table)
+		dbc.AutoMigrate(table)
 		fmt.Println("(Done)")
 	}
 }
