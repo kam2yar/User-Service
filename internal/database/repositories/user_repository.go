@@ -9,8 +9,8 @@ import (
 type UserRepositoryInterface interface {
 	All(limit int) []dto.UserDto
 	FindByID(id uint) (dto.UserDto, error)
-	Create(userDto *dto.UserDto) (dto.UserDto, error)
-	Update(userDto *dto.UserDto) (dto.UserDto, error)
+	Create(userDto *dto.UserDto) error
+	Update(userDto *dto.UserDto) error
 	Delete(id uint) error
 }
 
@@ -28,7 +28,10 @@ func (u *UserDatabaseRepository) FindByID(id uint) (dto.UserDto, error) {
 		return dto.UserDto{}, result.Error
 	}
 
-	return convertToUserDto(&user), nil
+	userDto := dto.UserDto{}
+	fillUserDto(&user, &userDto)
+
+	return userDto, nil
 }
 
 func (u *UserDatabaseRepository) All(limit int) []dto.UserDto {
@@ -36,14 +39,17 @@ func (u *UserDatabaseRepository) All(limit int) []dto.UserDto {
 	dbc.Limit(limit).Find(&users)
 
 	var result []dto.UserDto
-	for _, u := range users {
-		result = append(result, convertToUserDto(&u))
+	for _, user := range users {
+		userDto := dto.UserDto{}
+		fillUserDto(&user, &userDto)
+
+		result = append(result, userDto)
 	}
 
 	return result
 }
 
-func (u *UserDatabaseRepository) Create(userDto *dto.UserDto) (dto.UserDto, error) {
+func (u *UserDatabaseRepository) Create(userDto *dto.UserDto) error {
 	user := entities.User{
 		Name:     userDto.GetName(),
 		Email:    userDto.GetEmail(),
@@ -51,15 +57,15 @@ func (u *UserDatabaseRepository) Create(userDto *dto.UserDto) (dto.UserDto, erro
 	}
 
 	result := dbc.Create(&user)
-
 	if result.Error != nil {
-		return dto.UserDto{}, result.Error
+		return result.Error
 	}
 
-	return convertToUserDto(&user), nil
+	fillUserDto(&user, userDto)
+	return nil
 }
 
-func (u *UserDatabaseRepository) Update(userDto *dto.UserDto) (dto.UserDto, error) {
+func (u *UserDatabaseRepository) Update(userDto *dto.UserDto) error {
 	user := entities.User{
 		ID:        userDto.GetId(),
 		Name:      userDto.GetName(),
@@ -73,19 +79,16 @@ func (u *UserDatabaseRepository) Update(userDto *dto.UserDto) (dto.UserDto, erro
 	result := dbc.Save(&user)
 
 	if result.Error != nil {
-		return dto.UserDto{}, result.Error
+		return result.Error
 	}
 
-	return convertToUserDto(&user), nil
+	fillUserDto(&user, userDto)
+	return nil
 }
 
 func (u *UserDatabaseRepository) Delete(id uint) error {
 	var user = entities.User{ID: id}
 	result := dbc.Delete(&user)
-
-	if result.RowsAffected == 0 {
-		return errors.New("user not found")
-	}
 
 	if result.Error != nil {
 		return result.Error
@@ -94,16 +97,12 @@ func (u *UserDatabaseRepository) Delete(id uint) error {
 	return nil
 }
 
-func convertToUserDto(u *entities.User) dto.UserDto {
-	user := dto.UserDto{}
-
-	user.SetId(u.ID)
-	user.SetEmail(u.Email)
-	user.SetName(u.Name)
-	user.SetPassword(u.Password)
-	user.SetCreatedAt(u.CreatedAt)
-	user.SetUpdatedAt(u.UpdatedAt)
-	user.SetDeletedAt(u.DeletedAt)
-
-	return user
+func fillUserDto(u *entities.User, userDto *dto.UserDto) {
+	userDto.SetId(u.ID)
+	userDto.SetEmail(u.Email)
+	userDto.SetName(u.Name)
+	userDto.SetPassword(u.Password)
+	userDto.SetCreatedAt(u.CreatedAt)
+	userDto.SetUpdatedAt(u.UpdatedAt)
+	userDto.SetDeletedAt(u.DeletedAt)
 }

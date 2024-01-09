@@ -22,6 +22,7 @@ func serveGRPC() {
 
 	s := grpc.NewServer()
 	pb.RegisterUserServer(s, &v1.UserManagementServer{})
+
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

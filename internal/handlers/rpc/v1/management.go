@@ -2,9 +2,10 @@ package v1
 
 import (
 	"context"
-	"fmt"
 	pb "github.com/kam2yar/user-service/api"
-	"math/rand"
+	"github.com/kam2yar/user-service/internal/dto"
+	"github.com/kam2yar/user-service/internal/services"
+	"time"
 )
 
 type UserManagementServer struct {
@@ -12,9 +13,17 @@ type UserManagementServer struct {
 }
 
 func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
-	fmt.Println("CTX:", ctx)
-	fmt.Println("Request:", request)
-	var userId = int32(rand.Intn(10000))
+	userDto := dto.UserDto{}
+	userDto.SetName(request.Name)
+	userDto.SetEmail(request.Email)
+	userDto.SetPassword(request.Password)
 
-	return &pb.CreateResponse{Id: userId, Name: request.Name, Email: request.Email, Password: request.Password, CreatedAt: "now"}, nil
+	services.CreateUser(&userDto)
+
+	return &pb.CreateResponse{
+		Id:        uint32(userDto.GetId()),
+		Name:      userDto.GetName(),
+		Email:     userDto.GetEmail(),
+		CreatedAt: userDto.GetCreatedAt().Format(time.DateTime),
+	}, nil
 }
