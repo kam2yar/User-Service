@@ -13,10 +13,17 @@ func main() {
 	fmt.Println("Migrations finished successfully", time.RFC822)
 }
 
+var tables = []any{
+	&entities.User{},
+}
+
 func migrate() {
 	db := connections.DefaultConnection()
 
-	fmt.Print("Processing User... ")
-	db.AutoMigrate(&entities.User{})
-	fmt.Println("(Done)")
+	for index, table := range tables {
+		fmt.Print(index + 1)
+		fmt.Print(") Processing User... ")
+		db.AutoMigrate(table)
+		fmt.Println("(Done)")
+	}
 }
