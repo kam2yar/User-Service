@@ -7,5 +7,5 @@ import (
 
 func main() {
 	internal.Bootstrap()
-	fmt.Println("Hello world")
+	fmt.Println("Hello world man fantastic")
 }

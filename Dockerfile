@@ -10,11 +10,10 @@ COPY . /app
 # Download and install any required dependencies
 RUN go mod download
 
-# Build the Go app
-RUN go build -o tmp/run cmd/run.go
+# Install air
+RUN go install github.com/cosmtrek/air@latest
 
 # Expose port 8080 for incoming traffic
 EXPOSE 8080
 
-# Define the command to run the app when the container starts
-CMD ["/app/tmp/run"]
+ENTRYPOINT ["air"]

@@ -11,6 +11,8 @@ services:
       - db
     networks:
       - network
+    volumes:
+      - .:/app
   db:
     image: postgres:latest
     container_name: postgres
