@@ -7,14 +7,14 @@ import (
 	"time"
 )
 
+var tables = []any{
+	&entities.User{},
+}
+
 func main() {
 	fmt.Println("Start migrating database structures", time.RFC822)
 	migrate()
 	fmt.Println("Migrations finished successfully", time.RFC822)
-}
-
-var tables = []any{
-	&entities.User{},
 }
 
 func migrate() {
