@@ -13,6 +13,14 @@ RUN go mod download
 # Install air
 RUN go install github.com/cosmtrek/air@latest
 
+# Install Protobuff compiler
+RUN apt-get update
+RUN apt install -y protobuf-compiler
+
+# Install Protobuff plugins
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
 # Expose port 8080 for incoming traffic
 EXPOSE 8080
 
