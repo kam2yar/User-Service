@@ -14,7 +14,7 @@ type DatabaseConfig struct {
 }
 
 var postgresPort, _ = strconv.Atoi(services.Env("POSTGRES_PORT"))
-var Postgres DatabaseConfig = DatabaseConfig{
+var Postgres = DatabaseConfig{
 	Host:     services.Env("POSTGRES_HOST"),
 	Username: services.Env("POSTGRES_USER"),
 	Password: services.Env("POSTGRES_PASSWORD"),

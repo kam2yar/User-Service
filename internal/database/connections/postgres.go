@@ -10,7 +10,7 @@ import (
 type Postgres struct{}
 
 func (Postgres) GetConnection() (*gorm.DB, error) {
-	var config configurations.DatabaseConfig = configurations.Postgres
+	var config = configurations.Postgres
 
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN: fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Tehran",
