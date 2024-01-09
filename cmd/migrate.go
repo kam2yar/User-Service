@@ -12,9 +12,9 @@ var tables = []any{
 }
 
 func main() {
-	fmt.Println("Start migrating database structures", time.RFC822)
+	fmt.Println("Start migrating database structures", time.DateTime)
 	migrate()
-	fmt.Println("Migrations finished successfully", time.RFC822)
+	fmt.Println("Migrations finished successfully", time.DateTime)
 }
 
 func migrate() {

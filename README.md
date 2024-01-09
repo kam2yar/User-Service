@@ -25,6 +25,11 @@ make logs
 make bash
 ```
 
+## Build executable app
+```
+make executable
+```
+
 ## Build the application's docker image
 ```
 make build
@@ -33,6 +38,11 @@ make build
 ## Force recreate the app container after build
 ```
 make recreate
+```
+
+## Restart docker containers
+```
+make restart
 ```
 
 ## Generate protobuf files
