@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"log"
 )
 
 type DBInterface interface {
@@ -14,7 +15,7 @@ func DefaultConnection() *gorm.DB {
 	connection, err := database.GetConnection()
 
 	if err != nil {
-		panic(fmt.Sprintf("Database connenction abroted with error: %v", err))
+		log.Panicln(fmt.Sprintf("database connenction abroted with error: %v", err))
 	}
 
 	return connection

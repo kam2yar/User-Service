@@ -18,7 +18,10 @@ func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateReq
 	userDto.SetEmail(request.Email)
 	userDto.SetPassword(request.Password)
 
-	services.CreateUser(&userDto)
+	err := services.CreateUser(&userDto)
+	if err != nil {
+		// Todo return error
+	}
 
 	return &pb.CreateResponse{
 		Id:        uint32(userDto.GetId()),
