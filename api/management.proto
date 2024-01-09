@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package management;
+package Management.V1;
 
 option go_package = "github.com/kam2yar/user-service;user_service";
 
