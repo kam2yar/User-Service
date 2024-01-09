@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package management;
+
+option go_package = "github.com/kam2yar/user-service;user_service";
+
+service User {
+  rpc Create (CreateRequest) returns (CreateResponse) {}
+}
+
+message CreateRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message CreateResponse {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
+}
