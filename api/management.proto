@@ -4,12 +4,36 @@ package Management.V1;
 
 option go_package = "github.com/kam2yar/user-service;user_service";
 
+import "api/google/annotations.proto";
+
 service User {
-  rpc Create (CreateRequest) returns (UserData) {}
-  rpc Find (FindRequest) returns (UserData) {}
-  rpc List (ListRequest) returns (ListResponse) {}
-  rpc Update (UpdateRequest) returns (UserData) {}
-  rpc Delete (DeleteRequest) returns (DeleteResponse) {}
+  rpc Create (CreateRequest) returns (UserData) {
+    option (google.api.http) = {
+      post: "/v1/user"
+      body: "*"
+    };
+  }
+  rpc Find (FindRequest) returns (UserData) {
+    option (google.api.http) = {
+      get: "/v1/user/{id}"
+    };
+  }
+  rpc List (ListRequest) returns (ListResponse) {
+    option (google.api.http) = {
+      get: "/v1/user"
+    };
+  }
+  rpc Update (UpdateRequest) returns (UserData) {
+    option (google.api.http) = {
+      put: "/v1/user"
+      body: "*"
+    };
+  }
+  rpc Delete (DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      delete: "/v1/user/{id}"
+    };
+  }
 }
 
 message CreateRequest {

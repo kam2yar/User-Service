@@ -38,7 +38,7 @@ func serveGRPC() {
 	s := grpc.NewServer()
 	pb.RegisterUserServer(s, &v1.UserManagementServer{})
 
-	log.Printf("server listening at %v", lis.Addr())
+	log.Printf("grpc server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
@@ -57,5 +57,6 @@ func ServeGRPCGateway() error {
 		return err
 	}
 
+	log.Printf("grpc gateway server listening at %d", httpPort)
 	return http.ListenAndServe(fmt.Sprintf(":%d", httpPort), mux)
 }

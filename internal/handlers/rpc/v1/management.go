@@ -2,7 +2,7 @@ package v1
 
 import (
 	"context"
-	pb "github.com/kam2yar/user-service/api/pb"
+	pb "github.com/kam2yar/user-service/api"
 	"github.com/kam2yar/user-service/internal/dto"
 	"github.com/kam2yar/user-service/internal/services"
 	"google.golang.org/grpc/codes"
