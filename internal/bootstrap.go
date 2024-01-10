@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	pb "github.com/kam2yar/user-service/api/pb"
+	pb "github.com/kam2yar/user-service/api"
 	v1 "github.com/kam2yar/user-service/internal/handlers/rpc/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

@@ -52,7 +52,12 @@ func (s *UserManagementServer) Find(ctx context.Context, request *pb.FindRequest
 }
 
 func (s *UserManagementServer) List(ctx context.Context, request *pb.ListRequest) (*pb.ListResponse, error) {
-	userList := services.List(int(request.GetLimit()))
+	limit := int(request.GetLimit())
+	if limit == 0 {
+		limit = 20
+	}
+
+	userList := services.List(limit)
 
 	var users = make([]*pb.UserData, len(*userList))
 	for i, userDto := range *userList {
