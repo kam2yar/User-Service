@@ -5,7 +5,8 @@ services:
     build:
       dockerfile: Dockerfile
     ports:
-      - "${APP_FORWARD_PORT:-8080}:8080"
+      - "${HTTP_FORWARD_PORT:-80}:80"
+      - "${GRPC_FORWARD_PORT:-8080}:8080"
     depends_on:
       - db
     networks:

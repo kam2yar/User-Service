@@ -23,7 +23,8 @@ RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
 RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 
-# Expose port 8080 for incoming traffic
+# Expose port for incoming traffic
+EXPOSE 80
 EXPOSE 8080
 
 ENTRYPOINT ["air"]
