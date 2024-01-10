@@ -49,3 +49,22 @@ func (s *UserManagementServer) Find(ctx context.Context, request *pb.FindRequest
 		UpdatedAt: userDto.GetUpdatedAt().Format(time.DateTime),
 	}, nil
 }
+
+func (s *UserManagementServer) List(ctx context.Context, request *pb.ListRequest) (*pb.ListResponse, error) {
+	userList := services.List(int(request.GetLimit()))
+
+	var users = make([]*pb.UserData, len(*userList))
+	for i, userDto := range *userList {
+		users[i] = &pb.UserData{
+			Id:        uint32(userDto.GetId()),
+			Name:      userDto.GetName(),
+			Email:     userDto.GetEmail(),
+			CreatedAt: userDto.GetCreatedAt().Format(time.DateTime),
+			UpdatedAt: userDto.GetUpdatedAt().Format(time.DateTime),
+		}
+	}
+
+	return &pb.ListResponse{
+		Data: users,
+	}, nil
+}

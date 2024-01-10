@@ -7,6 +7,7 @@ option go_package = "github.com/kam2yar/user-service;user_service";
 service User {
   rpc Create (CreateRequest) returns (CreateResponse) {}
   rpc Find (FindRequest) returns (FindResponse) {}
+  rpc List (ListRequest) returns (ListResponse) {}
 }
 
 message CreateRequest {
@@ -27,6 +28,22 @@ message FindRequest {
 }
 
 message FindResponse {
+  uint32 id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message ListRequest {
+  uint32 limit = 1;
+}
+
+message ListResponse {
+  repeated UserData data = 1;
+}
+
+message UserData {
   uint32 id = 1;
   string name = 2;
   string email = 3;

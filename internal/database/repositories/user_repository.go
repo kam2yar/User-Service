@@ -7,7 +7,7 @@ import (
 )
 
 type UserRepositoryInterface interface {
-	All(limit int) []dto.UserDto
+	List(limit int) *[]dto.UserDto
 	FindByID(id uint) (dto.UserDto, error)
 	Create(userDto *dto.UserDto) error
 	Update(userDto *dto.UserDto) error
@@ -34,9 +34,9 @@ func (u *UserDatabaseRepository) FindByID(id uint) (dto.UserDto, error) {
 	return userDto, nil
 }
 
-func (u *UserDatabaseRepository) All(limit int) []dto.UserDto {
+func (u *UserDatabaseRepository) List(limit int) *[]dto.UserDto {
 	var users []entities.User
-	dbc.Limit(limit).Find(&users)
+	dbc.Limit(limit).Order("id asc").Find(&users)
 
 	var result []dto.UserDto
 	for _, user := range users {
@@ -46,7 +46,7 @@ func (u *UserDatabaseRepository) All(limit int) []dto.UserDto {
 		result = append(result, userDto)
 	}
 
-	return result
+	return &result
 }
 
 func (u *UserDatabaseRepository) Create(userDto *dto.UserDto) error {

@@ -7,9 +7,9 @@ import (
 	"log"
 )
 
-func CreateUser(userDto *dto.UserDto) error {
-	var userRepository repositories.UserRepositoryInterface = &repositories.UserDatabaseRepository{}
+var userRepository repositories.UserRepositoryInterface = &repositories.UserDatabaseRepository{}
 
+func CreateUser(userDto *dto.UserDto) error {
 	password := userDto.GetPassword()
 	hashed, err := HashPassword(password)
 	if err != nil {
@@ -29,15 +29,17 @@ func CreateUser(userDto *dto.UserDto) error {
 }
 
 func FindUser(id uint) (*dto.UserDto, error) {
-	var userRepository repositories.UserRepositoryInterface = &repositories.UserDatabaseRepository{}
-
 	userDto, err := userRepository.FindByID(id)
 	if err != nil {
-		log.Println("create user failed: ", err)
+		log.Println("find user failed: ", err)
 		return &userDto, err
 	}
 
 	return &userDto, nil
+}
+
+func List(limit int) *[]dto.UserDto {
+	return userRepository.List(limit)
 }
 
 func HashPassword(password string) (string, error) {
