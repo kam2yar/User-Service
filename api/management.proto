@@ -40,7 +40,7 @@ message ListRequest {
 }
 
 message ListResponse {
-  repeated UserData data = 1;
+  repeated UserData users = 1;
 }
 
 message UserData {

@@ -65,6 +65,6 @@ func (s *UserManagementServer) List(ctx context.Context, request *pb.ListRequest
 	}
 
 	return &pb.ListResponse{
-		Data: users,
+		Users: users,
 	}, nil
 }
