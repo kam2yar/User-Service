@@ -16,4 +16,4 @@ executable:
 	docker-compose exec app go build -o ./bin/run ./cmd/run.go
 	docker-compose exec app go build -o ./bin/migrate ./cmd/migrate.go
 pb:
-	docker-compose exec app bash -c 'protoc -I ./api --go_out ./api/pb --go_opt paths=source_relative --go-grpc_out ./api/pb --go-grpc_opt paths=source_relative ./api/management.proto'
+	docker-compose exec app bash -c 'protoc -I ./api --go_out ./api/pb --go_opt paths=source_relative --go-grpc_out ./api/pb --go-grpc_opt paths=source_relative --grpc-gateway_out ./api/pb --grpc-gateway_opt paths=source_relative ./api/management.proto'
