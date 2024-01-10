@@ -28,6 +28,18 @@ func CreateUser(userDto *dto.UserDto) error {
 	return nil
 }
 
+func FindUser(id uint) (*dto.UserDto, error) {
+	var userRepository repositories.UserRepositoryInterface = &repositories.UserDatabaseRepository{}
+
+	userDto, err := userRepository.FindByID(id)
+	if err != nil {
+		log.Println("create user failed: ", err)
+		return &userDto, err
+	}
+
+	return &userDto, nil
+}
+
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
