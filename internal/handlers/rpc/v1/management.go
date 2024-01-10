@@ -14,7 +14,7 @@ type UserManagementServer struct {
 	pb.UnimplementedUserServer
 }
 
-func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateRequest) (*pb.CreateResponse, error) {
+func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateRequest) (*pb.UserData, error) {
 	userDto := dto.UserDto{}
 	userDto.SetName(request.GetName())
 	userDto.SetEmail(request.GetEmail())
@@ -26,22 +26,23 @@ func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateReq
 		return nil, err
 	}
 
-	return &pb.CreateResponse{
+	return &pb.UserData{
 		Id:        uint32(userDto.GetId()),
 		Name:      userDto.GetName(),
 		Email:     userDto.GetEmail(),
 		CreatedAt: userDto.GetCreatedAt().Format(time.DateTime),
+		UpdatedAt: userDto.GetUpdatedAt().Format(time.DateTime),
 	}, nil
 }
 
-func (s *UserManagementServer) Find(ctx context.Context, request *pb.FindRequest) (*pb.FindResponse, error) {
+func (s *UserManagementServer) Find(ctx context.Context, request *pb.FindRequest) (*pb.UserData, error) {
 	userDto, err := services.FindUser(uint(request.GetId()))
 	if err != nil {
 		err := status.Error(codes.Internal, err.Error())
 		return nil, err
 	}
 
-	return &pb.FindResponse{
+	return &pb.UserData{
 		Id:        uint32(userDto.GetId()),
 		Name:      userDto.GetName(),
 		Email:     userDto.GetEmail(),
@@ -66,5 +67,40 @@ func (s *UserManagementServer) List(ctx context.Context, request *pb.ListRequest
 
 	return &pb.ListResponse{
 		Users: users,
+	}, nil
+}
+
+func (s *UserManagementServer) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UserData, error) {
+	userDto := dto.UserDto{}
+	userDto.SetId(uint(request.GetId()))
+	userDto.SetName(request.GetName())
+	userDto.SetEmail(request.GetEmail())
+	userDto.SetPassword(request.GetPassword())
+
+	err := services.UpdateUser(&userDto)
+	if err != nil {
+		err := status.Error(codes.Internal, err.Error())
+		return nil, err
+	}
+
+	return &pb.UserData{
+		Id:        uint32(userDto.GetId()),
+		Name:      userDto.GetName(),
+		Email:     userDto.GetEmail(),
+		CreatedAt: userDto.GetCreatedAt().Format(time.DateTime),
+		UpdatedAt: userDto.GetUpdatedAt().Format(time.DateTime),
+	}, nil
+}
+
+func (s *UserManagementServer) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+	err := services.DeleteUser(uint(request.GetId()))
+
+	if err != nil {
+		err := status.Error(codes.Internal, err.Error())
+		return nil, err
+	}
+
+	return &pb.DeleteResponse{
+		Success: true,
 	}, nil
 }

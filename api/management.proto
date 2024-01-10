@@ -5,9 +5,11 @@ package Management.V1;
 option go_package = "github.com/kam2yar/user-service;user_service";
 
 service User {
-  rpc Create (CreateRequest) returns (CreateResponse) {}
-  rpc Find (FindRequest) returns (FindResponse) {}
+  rpc Create (CreateRequest) returns (UserData) {}
+  rpc Find (FindRequest) returns (UserData) {}
   rpc List (ListRequest) returns (ListResponse) {}
+  rpc Update (UpdateRequest) returns (UserData) {}
+  rpc Delete (DeleteRequest) returns (DeleteResponse) {}
 }
 
 message CreateRequest {
@@ -16,23 +18,16 @@ message CreateRequest {
   string password = 3;
 }
 
-message CreateResponse {
-  uint32 id = 1;
-  string name = 2;
-  string email = 3;
-  string created_at = 4;
-}
-
-message FindRequest {
-  uint32 id = 1;
-}
-
-message FindResponse {
+message UserData {
   uint32 id = 1;
   string name = 2;
   string email = 3;
   string created_at = 4;
   string updated_at = 5;
+}
+
+message FindRequest {
+  uint32 id = 1;
 }
 
 message ListRequest {
@@ -43,10 +38,17 @@ message ListResponse {
   repeated UserData users = 1;
 }
 
-message UserData {
+message UpdateRequest {
   uint32 id = 1;
   string name = 2;
   string email = 3;
-  string created_at = 4;
-  string updated_at = 5;
+  string password = 4;
+}
+
+message DeleteRequest {
+  uint32 id = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
 }

@@ -22,15 +22,19 @@ const (
 	User_Create_FullMethodName = "/Management.V1.User/Create"
 	User_Find_FullMethodName   = "/Management.V1.User/Find"
 	User_List_FullMethodName   = "/Management.V1.User/List"
+	User_Update_FullMethodName = "/Management.V1.User/Update"
+	User_Delete_FullMethodName = "/Management.V1.User/Delete"
 )
 
 // UserClient is the client API for User service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error)
-	Find(ctx context.Context, in *FindRequest, opts ...grpc.CallOption) (*FindResponse, error)
+	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*UserData, error)
+	Find(ctx context.Context, in *FindRequest, opts ...grpc.CallOption) (*UserData, error)
 	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
+	Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UserData, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 }
 
 type userClient struct {
@@ -41,8 +45,8 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 	return &userClient{cc}
 }
 
-func (c *userClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateResponse, error) {
-	out := new(CreateResponse)
+func (c *userClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*UserData, error) {
+	out := new(UserData)
 	err := c.cc.Invoke(ctx, User_Create_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +54,8 @@ func (c *userClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *userClient) Find(ctx context.Context, in *FindRequest, opts ...grpc.CallOption) (*FindResponse, error) {
-	out := new(FindResponse)
+func (c *userClient) Find(ctx context.Context, in *FindRequest, opts ...grpc.CallOption) (*UserData, error) {
+	out := new(UserData)
 	err := c.cc.Invoke(ctx, User_Find_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -68,13 +72,33 @@ func (c *userClient) List(ctx context.Context, in *ListRequest, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *userClient) Update(ctx context.Context, in *UpdateRequest, opts ...grpc.CallOption) (*UserData, error) {
+	out := new(UserData)
+	err := c.cc.Invoke(ctx, User_Update_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+	out := new(DeleteResponse)
+	err := c.cc.Invoke(ctx, User_Delete_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
-	Create(context.Context, *CreateRequest) (*CreateResponse, error)
-	Find(context.Context, *FindRequest) (*FindResponse, error)
+	Create(context.Context, *CreateRequest) (*UserData, error)
+	Find(context.Context, *FindRequest) (*UserData, error)
 	List(context.Context, *ListRequest) (*ListResponse, error)
+	Update(context.Context, *UpdateRequest) (*UserData, error)
+	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -82,14 +106,20 @@ type UserServer interface {
 type UnimplementedUserServer struct {
 }
 
-func (UnimplementedUserServer) Create(context.Context, *CreateRequest) (*CreateResponse, error) {
+func (UnimplementedUserServer) Create(context.Context, *CreateRequest) (*UserData, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedUserServer) Find(context.Context, *FindRequest) (*FindResponse, error) {
+func (UnimplementedUserServer) Find(context.Context, *FindRequest) (*UserData, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Find not implemented")
 }
 func (UnimplementedUserServer) List(context.Context, *ListRequest) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedUserServer) Update(context.Context, *UpdateRequest) (*UserData, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedUserServer) Delete(context.Context, *DeleteRequest) (*DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -158,6 +188,42 @@ func _User_List_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Update_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Update(ctx, req.(*UpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Delete(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +242,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _User_List_Handler,
+		},
+		{
+			MethodName: "Update",
+			Handler:    _User_Update_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _User_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
