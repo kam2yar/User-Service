@@ -2,7 +2,7 @@ package internal
 
 import (
 	"fmt"
-	pb "github.com/kam2yar/user-service/api"
+	pb "github.com/kam2yar/user-service/api/pb"
 	v1 "github.com/kam2yar/user-service/internal/handlers/rpc/v1"
 	"google.golang.org/grpc"
 	"log"
