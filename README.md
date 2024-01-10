@@ -5,12 +5,12 @@ Small service for manage the user entity
 1. docker
 2. docker-compose
 
-## Run the application
+## Run the containers
 ```
 make up
 ```
 
-## Stop the application
+## Stop the containers
 ```
 make down
 ```
@@ -20,7 +20,7 @@ make down
 make logs
 ```
 
-## Access to container bash
+## Access to the app container bash
 ```
 make bash
 ```
@@ -30,7 +30,7 @@ make bash
 make executable
 ```
 
-## Build the application's docker image
+## Build the docker image for app
 ```
 make build
 ```
