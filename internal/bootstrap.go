@@ -3,9 +3,12 @@ package internal
 import (
 	"context"
 	"fmt"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	pb "github.com/kam2yar/user-service/api"
 	v1 "github.com/kam2yar/user-service/internal/handlers/rpc/v1"
+	"github.com/kam2yar/user-service/internal/interceptors"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
@@ -35,7 +38,12 @@ func serveGRPC() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	s := grpc.NewServer()
+	logger := zap.NewExample()
+
+	s := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(
+			logging.UnaryServerInterceptor(interceptors.LoggerInterceptor(logger), logging.WithLogOnEvents(logging.StartCall, logging.FinishCall)),
+		))
 	pb.RegisterUserServer(s, &v1.UserManagementServer{})
 
 	log.Printf("grpc server listening at %v", lis.Addr())
