@@ -1,5 +1,7 @@
 up:
 	docker-compose up -d
+migrate:
+	docker-compose exec app go run cmd/migrate.go
 down:
 	docker-compose down
 logs:
