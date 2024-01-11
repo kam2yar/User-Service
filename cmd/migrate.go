@@ -22,7 +22,7 @@ func migrate() {
 
 	for index, table := range tables {
 		fmt.Print(index + 1)
-		fmt.Print(") Processing User... ")
+		fmt.Print(") Processing... ")
 		dbc.AutoMigrate(table)
 		fmt.Println("(Done)")
 	}
