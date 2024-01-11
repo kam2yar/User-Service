@@ -5,7 +5,21 @@ Small service for manage the user entity
 1. docker
 2. docker-compose
 
+# Installation
+
+# Automatic
+You can setup applications with:
+```
+make setup
+```
+
+# Manual
+You can also do any step by yourself
+
 ## Copy .env.example to .env
+```
+make env
+```
 
 ## Run the containers
 ```
@@ -15,6 +29,17 @@ make up
 ```
 make migrate
 ```
+## Build executable app
+```
+make executable
+```
+## Generate protobuf files
+```
+make pb
+```
+
+# Additional commands
+These are some important commands that you can use after setup the application
 
 ## Watch application logs
 ```
@@ -24,11 +49,6 @@ make logs
 ## Access to the app container bash
 ```
 make bash
-```
-
-## Build executable app
-```
-make executable
 ```
 
 ## Stop the containers
@@ -49,9 +69,4 @@ make recreate
 ## Restart docker containers
 ```
 make restart
-```
-
-## Generate protobuf files
-```
-make pb
 ```

@@ -1,19 +1,27 @@
+setup:
+	make env
+	make up
+	make migrate
+	make executable
+	make pb
+env:
+	cp .env.example .env
 up:
 	docker-compose up -d
-migrate:
-	docker-compose exec app go run cmd/migrate.go
 down:
 	docker-compose down
-logs:
-	docker-compose logs -f app
-bash:
-	docker-compose exec app bash
 build:
 	docker-compose build app
 restart:
 	docker-compose restart
 recreate:
 	docker-compose up -d --force-recreate
+migrate:
+	docker-compose exec app go run cmd/migrate.go
+logs:
+	docker-compose logs -f app
+bash:
+	docker-compose exec app bash
 executable:
 	docker-compose exec app go build -race -o ./bin/run ./cmd/run.go
 	docker-compose exec app go build -race -o ./bin/migrate ./cmd/migrate.go
