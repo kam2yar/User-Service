@@ -1,19 +1,19 @@
 # User service
 Small service for manage the user entity
 
+# Installation
+
 ### Requirements:
 1. docker
 2. docker-compose
 
-# Installation
-
-# Automatic
+# 1) Automatic
 You can setup applications with:
 ```
 make setup
 ```
 
-# Manual
+# 2) Manual
 You can also do any step by yourself
 
 ## Copy .env.example to .env
