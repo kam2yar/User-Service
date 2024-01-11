@@ -3,8 +3,8 @@ package services
 import (
 	"github.com/kam2yar/user-service/internal/database/repositories"
 	"github.com/kam2yar/user-service/internal/dto"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 )
 
 var userRepository repositories.UserRepositoryInterface = &repositories.UserDatabaseRepository{}
@@ -13,7 +13,7 @@ func CreateUser(userDto *dto.UserDto) error {
 	password := userDto.GetPassword()
 	hashed, err := HashPassword(password)
 	if err != nil {
-		log.Println("hash user password failed", err)
+		zap.L().Warn("hash user password failed", zap.Error(err))
 		return err
 	}
 
@@ -21,7 +21,7 @@ func CreateUser(userDto *dto.UserDto) error {
 
 	err = userRepository.Create(userDto)
 	if err != nil {
-		log.Println("create user failed: ", err)
+		zap.L().Warn("create user failed", zap.Error(err))
 		return err
 	}
 
@@ -31,7 +31,7 @@ func CreateUser(userDto *dto.UserDto) error {
 func FindUser(id uint) (*dto.UserDto, error) {
 	userDto, err := userRepository.FindByID(id)
 	if err != nil {
-		log.Println("find user failed: ", err)
+		zap.L().Warn("find user failed", zap.Error(err))
 		return &userDto, err
 	}
 
@@ -46,7 +46,7 @@ func UpdateUser(userDto *dto.UserDto) error {
 	password := userDto.GetPassword()
 	hashed, err := HashPassword(password)
 	if err != nil {
-		log.Println("hash user password failed", err)
+		zap.L().Warn("hash user password failed", zap.Error(err))
 		return err
 	}
 
@@ -54,7 +54,7 @@ func UpdateUser(userDto *dto.UserDto) error {
 
 	err = userRepository.Update(userDto)
 	if err != nil {
-		log.Println("update user failed: ", err)
+		zap.L().Warn("update user failed", zap.Error(err))
 		return err
 	}
 
@@ -64,7 +64,7 @@ func UpdateUser(userDto *dto.UserDto) error {
 func DeleteUser(id uint) error {
 	err := userRepository.Delete(id)
 	if err != nil {
-		log.Println("delete user failed: ", err)
+		zap.L().Warn("delete user failed", zap.Error(err))
 		return err
 	}
 

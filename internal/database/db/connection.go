@@ -2,8 +2,8 @@ package db
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"log"
 )
 
 type DBInterface interface {
@@ -15,7 +15,7 @@ func DefaultConnection() *gorm.DB {
 	connection, err := database.GetConnection()
 
 	if err != nil {
-		log.Panicln(fmt.Sprintf("database connenction abroted with error: %v", err))
+		zap.L().Panic(fmt.Sprintf("database connenction abroted with error: %v", err))
 	}
 
 	return connection

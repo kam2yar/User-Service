@@ -2,18 +2,15 @@ package main
 
 import (
 	"github.com/kam2yar/user-service/internal"
-	"log"
-	"os"
+	"go.uber.org/zap"
 )
 
+func init() {
+	zap.ReplaceGlobals(zap.Must(zap.NewProduction()))
+}
+
 func main() {
-	logFile, err := os.OpenFile("tmp/app.log", os.O_APPEND|os.O_RDWR|os.O_CREATE, 0644)
-	if err != nil {
-		log.Panicln(err)
-	}
-	defer logFile.Close()
-	log.SetOutput(logFile)
-	log.SetFlags(log.Lshortfile | log.LstdFlags)
+	zap.L().Info("Running app")
 
 	internal.Bootstrap()
 }

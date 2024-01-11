@@ -15,7 +15,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/status"
-	"log"
 	"net"
 	"net/http"
 )
@@ -39,10 +38,9 @@ func Bootstrap() {
 func ServeGRPC() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		zap.L().Panic(fmt.Sprintf("failed to listen: %v", err))
 	}
 
-	logger := zap.NewExample()
 	recoveryHandler = func(p interface{}) (err error) {
 		return status.Errorf(codes.Unknown, "panic triggered: %v", p)
 	}
@@ -52,14 +50,14 @@ func ServeGRPC() {
 
 	s := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			logging.UnaryServerInterceptor(interceptors.LoggerInterceptor(logger), logging.WithLogOnEvents(logging.StartCall, logging.FinishCall)), grpcRecovery.UnaryServerInterceptor(),
+			logging.UnaryServerInterceptor(interceptors.LoggerInterceptor(zap.L()), logging.WithLogOnEvents(logging.StartCall, logging.FinishCall)), grpcRecovery.UnaryServerInterceptor(),
 			grpcRecovery.UnaryServerInterceptor(recoveryOpts...),
 		))
 	pb.RegisterUserServer(s, &v1.UserManagementServer{})
 
-	log.Printf("grpc server listening at %v", lis.Addr())
+	zap.L().Info(fmt.Sprintf("grpc server listening at %v", lis.Addr()))
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		zap.L().Panic(fmt.Sprintf("failed to serve: %v", err))
 	}
 }
 
@@ -76,6 +74,6 @@ func ServeGRPCGateway() error {
 		return err
 	}
 
-	log.Printf("grpc gateway server listening at %d", httpPort)
+	zap.L().Info(fmt.Sprintf("grpc gateway server listening at %d", httpPort))
 	return http.ListenAndServe(fmt.Sprintf(":%d", httpPort), mux)
 }
