@@ -18,7 +18,7 @@ type UserDatabaseRepository struct{}
 
 func (u *UserDatabaseRepository) FindByID(id uint) (dto.UserDto, error) {
 	var user = entities.User{ID: id}
-	result := dbc.Limit(1).First(&user, id)
+	result := dbc().Limit(1).First(&user, id)
 
 	if result.RowsAffected == 0 {
 		return dto.UserDto{}, errors.New("user not found")
@@ -36,7 +36,7 @@ func (u *UserDatabaseRepository) FindByID(id uint) (dto.UserDto, error) {
 
 func (u *UserDatabaseRepository) List(limit int) *[]dto.UserDto {
 	var users []entities.User
-	dbc.Limit(limit).Order("id asc").Find(&users)
+	dbc().Limit(limit).Order("id asc").Find(&users)
 
 	var result []dto.UserDto
 	for _, user := range users {
@@ -56,7 +56,7 @@ func (u *UserDatabaseRepository) Create(userDto *dto.UserDto) error {
 		Password: userDto.GetPassword(),
 	}
 
-	result := dbc.Create(&user)
+	result := dbc().Create(&user)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -76,7 +76,7 @@ func (u *UserDatabaseRepository) Update(userDto *dto.UserDto) error {
 		DeletedAt: userDto.GetDeletedAt(),
 	}
 
-	result := dbc.Save(&user)
+	result := dbc().Save(&user)
 
 	if result.Error != nil {
 		return result.Error
@@ -88,7 +88,7 @@ func (u *UserDatabaseRepository) Update(userDto *dto.UserDto) error {
 
 func (u *UserDatabaseRepository) Delete(id uint) error {
 	var user = entities.User{ID: id}
-	result := dbc.Delete(&user)
+	result := dbc().Delete(&user)
 
 	if result.Error != nil {
 		return result.Error
