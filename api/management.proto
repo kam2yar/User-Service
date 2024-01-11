@@ -5,6 +5,7 @@ package Management.V1;
 option go_package = "github.com/kam2yar/user-service;user_service";
 
 import "api/google/annotations.proto";
+import "api/protovalidate/validate.proto";
 
 service User {
   rpc Create (CreateRequest) returns (UserData) {
@@ -37,9 +38,9 @@ service User {
 }
 
 message CreateRequest {
-  string name = 1;
-  string email = 2;
-  string password = 3;
+  string name = 1 [(buf.validate.field).string.min_len = 2];
+  string email = 2 [(buf.validate.field).string.email = true];
+  string password = 3 [(buf.validate.field).string.min_len = 6];
 }
 
 message UserData {
@@ -51,11 +52,11 @@ message UserData {
 }
 
 message FindRequest {
-  uint32 id = 1;
+  uint32 id = 1 [(buf.validate.field).uint32.gte = 1];
 }
 
 message ListRequest {
-  uint32 limit = 1;
+  uint32 limit = 1 [(buf.validate.field).uint32.gte = 1];
 }
 
 message ListResponse {
@@ -63,14 +64,14 @@ message ListResponse {
 }
 
 message UpdateRequest {
-  uint32 id = 1;
-  string name = 2;
-  string email = 3;
-  string password = 4;
+  uint32 id = 1 [(buf.validate.field).uint32.gte = 1];
+  string name = 2 [(buf.validate.field).string.min_len = 2];
+  string email = 3 [(buf.validate.field).string.email = true];
+  string password = 4 [(buf.validate.field).string.min_len = 6];
 }
 
 message DeleteRequest {
-  uint32 id = 1;
+  uint32 id = 1 [(buf.validate.field).uint32.gte = 1];
 }
 
 message DeleteResponse {

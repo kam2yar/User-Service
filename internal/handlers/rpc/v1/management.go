@@ -2,9 +2,11 @@ package v1
 
 import (
 	"context"
+	"github.com/bufbuild/protovalidate-go"
 	pb "github.com/kam2yar/user-service/api"
 	"github.com/kam2yar/user-service/internal/dto"
 	"github.com/kam2yar/user-service/internal/services"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"time"
@@ -15,12 +17,20 @@ type UserManagementServer struct {
 }
 
 func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateRequest) (*pb.UserData, error) {
+	v, err := protovalidate.New()
+	if err != nil {
+		zap.L().Panic("failed to initialize validator", zap.Error(err))
+	}
+	if err = v.Validate(request); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	userDto := dto.UserDto{}
 	userDto.SetName(request.GetName())
 	userDto.SetEmail(request.GetEmail())
 	userDto.SetPassword(request.GetPassword())
 
-	err := services.CreateUser(&userDto)
+	err = services.CreateUser(&userDto)
 	if err != nil {
 		err := status.Error(codes.Internal, err.Error())
 		return nil, err
@@ -36,6 +46,14 @@ func (s *UserManagementServer) Create(ctx context.Context, request *pb.CreateReq
 }
 
 func (s *UserManagementServer) Find(ctx context.Context, request *pb.FindRequest) (*pb.UserData, error) {
+	v, err := protovalidate.New()
+	if err != nil {
+		zap.L().Panic("failed to initialize validator", zap.Error(err))
+	}
+	if err = v.Validate(request); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	userDto, err := services.FindUser(uint(request.GetId()))
 	if err != nil {
 		err := status.Error(codes.Internal, err.Error())
@@ -76,13 +94,21 @@ func (s *UserManagementServer) List(ctx context.Context, request *pb.ListRequest
 }
 
 func (s *UserManagementServer) Update(ctx context.Context, request *pb.UpdateRequest) (*pb.UserData, error) {
+	v, err := protovalidate.New()
+	if err != nil {
+		zap.L().Panic("failed to initialize validator", zap.Error(err))
+	}
+	if err = v.Validate(request); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	userDto := dto.UserDto{}
 	userDto.SetId(uint(request.GetId()))
 	userDto.SetName(request.GetName())
 	userDto.SetEmail(request.GetEmail())
 	userDto.SetPassword(request.GetPassword())
 
-	err := services.UpdateUser(&userDto)
+	err = services.UpdateUser(&userDto)
 	if err != nil {
 		err := status.Error(codes.Internal, err.Error())
 		return nil, err
@@ -98,7 +124,15 @@ func (s *UserManagementServer) Update(ctx context.Context, request *pb.UpdateReq
 }
 
 func (s *UserManagementServer) Delete(ctx context.Context, request *pb.DeleteRequest) (*pb.DeleteResponse, error) {
-	err := services.DeleteUser(uint(request.GetId()))
+	v, err := protovalidate.New()
+	if err != nil {
+		zap.L().Panic("failed to initialize validator", zap.Error(err))
+	}
+	if err = v.Validate(request); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	err = services.DeleteUser(uint(request.GetId()))
 
 	if err != nil {
 		err := status.Error(codes.Internal, err.Error())
